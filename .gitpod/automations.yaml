@@ -1,0 +1,42 @@
+tasks:
+  hello-world:
+    name: Hello World
+    description: Simple sanity test to confirm environment is ready
+    command: |
+      echo "Hello, Gitpod!"
+      python3 --version
+      pip3 --version
+    triggeredBy:
+      - manual
+      # You can also use: postEnvironmentStart or postDevcontainerStart
+
+  install-dependencies:
+    name: Install Python dependencies
+    description: Installs all packages from requirements.txt
+    command: |
+      pip install -r requirements.txt
+    triggeredBy:
+      - manual
+
+services:
+  mock-backend:
+    name: Mock Backend
+    description: Starts a fake backend service for testing
+    commands:
+      start: |
+        echo "Starting mock backend..."
+        touch /tmp/backend.started
+        while true; do
+          sleep 5
+          echo "[Mock Backend] $(date)"
+        done
+      ready: |
+        if [ -f /tmp/backend.started ]; then
+          echo "Backend is ready!"
+          exit 0
+        else
+          echo "Backend not ready."
+          exit 1
+        fi
+    triggeredBy:
+      - manual
